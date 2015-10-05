@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="webmart">
+	
+	<property name="basedir" value="." />
+	
+	<property name="target.dir" value="${basedir}/target" />
+	
+	<property name="main.target.dir" value="${target.dir}/classes" />
+	
+	<property name="test.target.dir" value="${target.dir}/test-classes" />
+	
+	<property name="web.target" value="${basedir}/WebContent" />
+
+	<path id="develop.lib">
+		<fileset dir="${web.target}/WEB-INF/lib">
+			<include name="*.jar" />
+		</fileset>
+	</path>
+
+	<target name="clean">
+		<delete dir="${basedir}/build">
+		</delete>
+		<delete dir="${basedir}/dest">
+		</delete>
+		<delete dir="${target.dir}">
+		</delete>
+	</target>
+	
+	<target name="build-main-java" depends="clean" >
+		<mkdir dir="${main.target.dir}" />
+		<copy todir="${main.target.dir}">
+			<fileset dir="${basedir}/src/main/resources/">
+				<include name="**/*.xml" />
+				<include name="**/*.properties" />
+			</fileset>
+		</copy>
+		<javac encoding="UTF-8" source="1.7" target="1.7" includeantruntime="on" srcdir="${basedir}/src/main/java" destdir="${main.target.dir}" debug="true">
+			<classpath>
+				<fileset dir="${basedir}/lib">
+					<include name="*.jar" />
+				</fileset>
+				<fileset dir="${web.target}/WEB-INF/lib">
+					<include name="*.jar" />
+				</fileset>
+			</classpath>
+		</javac>
+	</target>
+	
+	<target name="dist" depends="build-main-java">
+		<mkdir dir="${basedir}/dest" />
+	  	<war warfile="${basedir}/dest/${ant.project.name}.war" webxml="${web.target}/WEB-INF/web.xml">
+	  		<fileset dir="${web.target}"/>
+	  	  	<classes dir="${main.target.dir}"/>
+	  	</war>
+	</target>
+</project>
